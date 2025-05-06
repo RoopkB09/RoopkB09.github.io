@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Forest Recipes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f5dc; /* Cream */
+      color: #2e8b57; /* Forest Green */
+    }
+
+    header {
+      background-color: #2e8b57;
+      color: #fff;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin: 1rem 0;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #2e8b57;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .search-bar {
+      display: flex;
+      margin-bottom: 1rem;
+    }
+
+    .search-bar input {
+      flex: 1;
+      padding: 0.5rem;
+      border: 1px solid #2e8b57;
+      border-radius: 4px 0 0 4px;
+    }
+
+    .search-bar button {
+      padding: 0.5rem 1rem;
+      background-color: #2e8b57;
+      color: white;
+      border: none;
+      border-radius: 0 4px 4px 0;
+      cursor: pointer;
+    }
+
+    .recipe {
+      border: 1px solid #2e8b57;
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background-color: #fffef5;
+    }
+
+    .checklist {
+      margin-top: 2rem;
+    }
+
+    .checklist label {
+      display: block;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+    }
+
+    .checklist input[type="checkbox"] {
+      margin-right: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Forest Recipes</h1>
+</header>
+
+<nav>
+  <a href="#home">Home</a>
+  <a href="#checklist">Checklist</a>
+</nav>
+
+<div class="container">
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search recipes..." oninput="filterRecipes()">
+    <button onclick="filterRecipes()">Search</button>
+  </div>
+
+  <!-- Home / Recipe List -->
+  <div id="home">
+    <div class="recipe" data-title="Avocado Toast">
+      <h3>Avocado Toast</h3>
+      <p>Simple and delicious breakfast with mashed avocado and toast.</p>
+    </div>
+    <div class="recipe" data-title="Forest Smoothie">
+      <h3>Forest Smoothie</h3>
+      <p>Spinach, banana, and almond milk smoothie for a green kick.</p>
+    </div>
+    <div class="recipe" data-title="Herb Chicken">
+      <h3>Herb Chicken</h3>
+      <p>Grilled chicken seasoned with rosemary, thyme, and garlic.</p>
+    </div>
+  </div>
+
+  <!-- Checklist -->
+  <div id="checklist" class="checklist">
+    <h2>Ingredient Checklist</h2>
+    <label><input type="checkbox">Avocados</label>
+    <label><input type="checkbox">Bread</label>
+    <label><input type="checkbox">Spinach</label>
+    <label><input type="checkbox">Bananas</label>
+    <label><input type="checkbox">Almond Milk</label>
+    <label><input type="checkbox">Chicken</label>
+    <label><input type="checkbox">Garlic</label>
+    <label><input type="checkbox">Thyme</label>
+    <label><input type="checkbox">Rosemary</label>
+  </div>
+</div>
+
+<script>
+  function filterRecipes() {
+    const input = document.getElementById("searchInput").value.toLowerCase();
+    const recipes = document.querySelectorAll(".recipe");
+    recipes.forEach(recipe => {
+      const title = recipe.getAttribute("data-title").toLowerCase();
+      recipe.style.display = title.includes(input) ? "block" : "none";
+    });
+  }
+</script>
+
+</body>
+</html>
