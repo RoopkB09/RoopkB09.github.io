@@ -5,15 +5,21 @@
   <title>Chef's Plate Recipes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
+    :root {
+      --main-green: #344F3A;
+      --accent-green: #2e8b57;
+      --bg-cream: #f5f5dc;
+    }
+
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f5f5dc;
-      color: #2e8b57;
+      background-color: var(--bg-cream);
+      color: var(--main-green);
     }
 
     header {
-      background-color: #2e8b57;
+      background-color: var(--main-green);
       color: #fff;
       padding: 1rem;
       text-align: center;
@@ -28,7 +34,7 @@
 
     nav a {
       text-decoration: none;
-      color: #2e8b57;
+      color: var(--main-green);
       font-weight: bold;
       cursor: pointer;
     }
@@ -38,7 +44,7 @@
     }
 
     .container {
-      max-width: 800px;
+      max-width: 900px;
       margin: 0 auto;
       padding: 1rem;
     }
@@ -59,13 +65,13 @@
     .search-bar input {
       flex: 1;
       padding: 0.5rem;
-      border: 1px solid #2e8b57;
+      border: 1px solid var(--main-green);
       border-radius: 4px 0 0 4px;
     }
 
     .search-bar button {
       padding: 0.5rem 1rem;
-      background-color: #2e8b57;
+      background-color: var(--main-green);
       color: white;
       border: none;
       border-radius: 0 4px 4px 0;
@@ -73,8 +79,8 @@
     }
 
     .recipe {
-      border: 1px solid #2e8b57;
-      border-radius: 6px;
+      border: 1px solid var(--main-green);
+      border-radius: 10px;
       padding: 1rem;
       margin-bottom: 1rem;
       background-color: #fffef5;
@@ -88,17 +94,71 @@
       height: 80px;
       object-fit: cover;
       border-radius: 50%;
-      border: 2px solid #2e8b57;
+      border: 2px solid var(--main-green);
+    }
+
+    .checklist-container {
+      background-color: white;
+      padding: 30px 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      max-width: 400px;
+      margin: 2rem auto;
+    }
+
+    .checklist-container h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+      color: var(--main-green);
+    }
+
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
     }
 
     .checklist label {
-      display: block;
-      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      font-size: 18px;
       cursor: pointer;
+      color: var(--main-green);
     }
 
     .checklist input[type="checkbox"] {
-      margin-right: 0.5rem;
+      display: none;
+    }
+
+    .custom-checkbox {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--main-green);
+      margin-right: 15px;
+      position: relative;
+      background-color: transparent;
+      transition: background-color 0.3s ease;
+    }
+
+    .checklist input[type="checkbox"]:checked + .custom-checkbox {
+      background-color: var(--main-green);
+    }
+
+    .custom-checkbox::after {
+      content: "✔";
+      color: white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -55%) scale(0);
+      font-size: 14px;
+      transition: transform 0.2s ease;
+    }
+
+    .checklist input[type="checkbox"]:checked + .custom-checkbox::after {
+      transform: translate(-50%, -55%) scale(1);
     }
   </style>
 </head>
@@ -136,17 +196,17 @@
       <div>
         <h3>Herb Chicken</h3>
         <p>Grilled chicken seasoned with rosemary, thyme, and garlic.</p>
-      
+      </div>
+    </div>
+    <div class="recipe" data-title="Beef Dumpling in Soup">
+      <img src="https://www.marionskitchen.com/wp-content/uploads/2021/08/Northern-Chinese-Beef-Dumplings2914.jpg" alt="Beef Dumpling" />
+      <div>
+        <h3>Beef Dumpling in Soup</h3>
+        <p>Hot and sour soup with beef dumplings.</p>
+      </div>
     </div>
   </div>
-<div class="recipe" data-title="Beef Dumpling in Soup">
-  <img src="https://www.marionskitchen.com/wp-content/uploads/2021/08/Northern-Chinese-Beef-Dumplings2914.jpg" alt="Beef Dumpling" />
-  <div>
-    <h3>Beef Dumpling in Soup</h3>
-    <p>Hot and sour soup with beef dumplings.</p>
-  </div>
-</div>
-  </div>  
+
   <!-- Search Section -->
   <div id="search" class="section">
     <div class="search-bar">
@@ -158,84 +218,24 @@
     </div>
   </div>
 
-
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <style>
-    body {zzzzZZzzzzzzzzzz
-      font-family: 'Georgia', serif;
-      background-color: #f7f3ec;
-      display: flex;
-      justify-content: center;
-      padding: 40px;
-    }
-
-    .checklist-container {
-      background-color: white;
-      padding: 30px 40px;
-      border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-      max-width: 400px;
-    }
-
-    .checklist-container h2 {
-      font-size: 24px;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .checklist {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .checklist label {
-      display: flex;
-      align-items: center;
-      font-size: 18px;
-      cursor: pointer;
-    }
-
-    .checklist input[type="checkbox"] {
-      display: none;
-    }
-
-    .custom-checkbox {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      border: 2px solid #123a2c;
-      margin-right: 15px;
-      position: relative;
-      background-color: transparent;
-      transition: background-color 0.3s ease;
-    }
-
-    .checklist input[type="checkbox"]:checked + .custom-checkbox {
-      background-color: #123a2c;
-    }
-
-    .custom-checkbox::after {
-      content: "✔";
-      color: white;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -55%) scale(0);
-      font-size: 14px;
-      transition: transform 0.2s ease;
-    }
-
-    .checklist input[type="checkbox"]:checked + .custom-checkbox::after {
-      transform: translate(-50%, -55%) scale(1);
-    }
-
-  </style>
-</head>
-<body>
+  <!-- Checklist Section -->
+  <div id="checklist" class="section">
+    <div class="checklist-container">
+      <h2>Ingredient Checklist</h2>
+      <div class="checklist">
+        <label><input type="checkbox" /><span class="custom-checkbox"></span> Avocados</label>
+        <label><input type="checkbox" /><span class="custom-checkbox"></span> Bread</label>
+        <label><input type="checkbox" /><span class="custom-checkbox"></span> Spinach</label>
+        <label><input type="checkbox" /><span class="custom-checkbox"></span> Bananas</label>
+        <label><input type="checkbox" /><span class="custom-checkbox"></span> Almond Milk</label>
+        <label><input type="checkbox" /><span class="custom-checkbox"></span> Chicken</label>
+        <label><input type="checkbox" /><span class="custom-checkbox"></span> Garlic</label>
+        <label><input type="checkbox" /><span class="custom-checkbox"></span> Thyme</label>
+        <label><input type="checkbox" /><span class="custom-checkbox"></span> Rosemary</label>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
   function showSection(id) {
