@@ -1,369 +1,94 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Chef's Plate Recipes</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Recipe Selector</title>
   <style>
-    /* Base Styles */
     body {
+      font-family: 'Georgia', serif;
+      background: #f5f2eb;
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f5f5dc;
-      color: #344F3A;
+      padding: 0;
     }
 
     header {
-      background-color: #344F3A;
-      color: #fff;
-      padding: 1.5rem 1rem;
-      text-align: center;
-    }
-
-    nav {
+      background: #fae3e3;
       display: flex;
-      justify-content: center;
-      gap: 2rem;
-      background-color: #e6e6d6;
-      padding: 1rem 0;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 2px solid #ddd;
     }
 
-    nav a {
-      text-decoration: none;
-      color: #344F3A;
-      font-weight: bold;
-      font-size: 1.1rem;
-      transition: color 0.3s;
+    header img {
+      height: 30px;
       cursor: pointer;
-    }
-
-    nav a:hover {
-      color: #2e8b57;
-    }
-
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 2rem 1rem;
     }
 
     .section {
-      display: none;
+      padding: 20px;
     }
 
-    .active {
+    .image-full {
+      width: 100%;
+      max-width: 1100px;
       display: block;
+      margin: 20px auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    .recipe {
-      border: 1px solid #344F3A;
-      border-radius: 12px;
-      padding: 1rem;
-      margin-bottom: 1.5rem;
-      background-color: #fffef5;
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s;
-      cursor: pointer;
-    }
-
-    .recipe:hover {
-      transform: scale(1.02);
-    }
-
-    .recipe img {
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
-      border-radius: 50%;
-      border: 3px solid #344F3A;
-    }
-
-    .recipe h3 {
-      margin: 0 0 0.5rem 0;
-    }
-
-    .recipe p {
-      margin: 0;
-    }
-
-    .search-bar {
-      display: flex;
-      margin-bottom: 2rem;
-    }
-
-    .search-bar input {
-      flex: 1;
-      padding: 0.75rem;
-      border: 1px solid #344F3A;
-      border-radius: 8px 0 0 8px;
-      font-size: 1rem;
-    }
-
-    .search-bar button {
-      padding: 0.75rem 1.5rem;
-      background-color: #344F3A;
-      color: white;
-      border: none;
-      border-radius: 0 8px 8px 0;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background-color 0.3s;
-    }
-
-    .search-bar button:hover {
-      background-color: #2e8b57;
-    }
-
-    #searchResults {
-      transition: opacity 0.4s ease;
-    }
-
-    mark {
-      background-color: #ffff99;
-      font-weight: bold;
-    }
-
-    .checklist-container {
-      background-color: #fffef5;
-      padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    }
-
-    .checklist-container h2 {
+    footer {
       text-align: center;
-      margin-bottom: 1.5rem;
-      font-size: 1.8rem;
-    }
-
-    .checklist {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .checklist label {
-      display: flex;
-      align-items: center;
-      font-size: 1.1rem;
-      cursor: pointer;
-      position: relative;
-      padding-left: 2.5rem;
-    }
-
-    .checklist input[type="checkbox"] {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
-    }
-
-    .custom-checkbox {
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      height: 20px;
-      width: 20px;
-      background-color: transparent;
-      border: 2px solid #344F3A;
-      border-radius: 50%;
-      transition: background-color 0.3s;
-    }
-
-    .checklist input[type="checkbox"]:checked ~ .custom-checkbox {
-      background-color: #344F3A;
-    }
-
-    .custom-checkbox::after {
-      content: "✔";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      color: white;
+      padding: 20px;
       font-size: 14px;
-      transition: transform 0.2s ease;
+      color: #555;
     }
 
-    .checklist input[type="checkbox"]:checked ~ .custom-checkbox::after {
-      transform: translate(-50%, -50%) scale(1);
+    button {
+      background-color: #2c4a33;
+      color: #fff;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 6px;
+      margin-top: 20px;
+      cursor: pointer;
     }
 
-    @media (max-width: 600px) {
-      .recipe {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .search-bar {
-        flex-direction: column;
-      }
-
-      .search-bar input,
-      .search-bar button {
-        width: 100%;
-        border-radius: 8px;
-      }
-
-      .search-bar button {
-        margin-top: 0.5rem;
-      }
+    button:hover {
+      background-color: #3a6443;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>Chef's Plate Recipes</h1>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/OOjs_UI_icon_userAvatar.svg/1024px-OOjs_UI_icon_userAvatar.svg.png" alt="Profile" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Icon_search_font_awesome.svg/2048px-Icon_search_font_awesome.svg.png" alt="Search" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/9/92/Home_icon_black.png" alt="Home" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Check_mark_icon.svg/2048px-Check_mark_icon.svg.png" alt="Check" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Settings_icon_2.svg" alt="Settings" />
   </header>
 
-  <nav>
-    <a onclick="showSection('home')">Home</a>
-    <a onclick="showSection('search')">Search</a>
-    <a onclick="showSection('checklist')">Checklist</a>
-  </nav>
+  <div class="section">
+    <h2 style="text-align: center;">Choose Meals by Mood</h2>
+    <img src="/mnt/data/Screen Shot 2025-05-08 at 7.22.37 PM.png" alt="Meal Mood Selection" class="image-full"/>
+  </div>
 
-  <div class="container">
-    <!-- Home Section -->
-    <div id="home" class="section active">
-      <div class="recipe" data-title="Avocado Toast">
-        <img src="https://media.gettyimages.com/id/1251583567/photo/toasts-of-dark-bread-with-avocado-slices-red-tomatoes-fried-egg-and-microgreen-top-view-with.jpg" alt="Avocado Toast with egg and microgreens" />
-        <div>
-          <h3>Avocado Toast</h3>
-          <p>Simple and delicious breakfast with mashed avocado and toast.</p>
-        </div>
-      </div>
-      
-      <div class="recipe" data-title="Forest Smoothie">
-        <img src="https://www.cookingclassy.com/wp-content/uploads/2019/07/green-smoothie-10.jpg" alt="Green spinach smoothie in a glass" />
-        <div>
-          <h3>Forest Smoothie</h3>
-          <p>Spinach, banana, and almond milk smoothie for a green kick.</p>
-        </div>
-      </div>
-      
-      <div class="recipe" data-title="Herb Chicken">
-        <img src="https://www.paleorunningmomma.com/wp-content/uploads/2020/12/creamy-garlic-herb-chicken_-14.jpg" alt="Creamy herb chicken on a plate" />
-        <div>
-          <h3>Herb Chicken</h3>
-          <p>Grilled chicken seasoned with rosemary, thyme, and garlic.</p>
-        </div>
-      </div>
-      
-      <div class="recipe" data-title="Beef Dumpling in Soup">
-        <img src="https://www.marionskitchen.com/wp-content/uploads/2021/08/Northern-Chinese-Beef-Dumplings2914.jpg" alt="Chinese beef dumplings in soup" />
-        <div>
-          <h3>Beef Dumpling in Soup</h3>
-          <p>Hot and sour soup with beef dumplings.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Search Section -->
-    <div id="search" class="section">
-      <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="Search recipes..." oninput="filterRecipes()" />
-        <button onclick="filterRecipes()">Search</button>
-      </div>
-      <div id="searchResults"></div>
-    </div>
-
-    <!-- Checklist Section -->
-    <div id="checklist" class="section">
-      <div class="checklist-container">
-        <h2>Ingredient Checklist</h2>
-        <div class="checklist">
-          <label><input type="checkbox" /><span class="custom-checkbox"></span> Avocados</label>
-          <label><input type="checkbox" /><span class="custom-checkbox"></span> Bread</label>
-          <label><input type="checkbox" /><span class="custom-checkbox"></span> Spinach</label>
-          <label><input type="checkbox" /><span class="custom-checkbox"></span> Bananas</label>
-          <label><input type="checkbox" /><span class="custom-checkbox"></span> Almond Milk</label>
-          <label><input type="checkbox" /><span class="custom-checkbox"></span> Chicken</label>
-          <label><input type="checkbox" /><span class="custom-checkbox"></span> Garlic</label>
-          <label><input type="checkbox" /><span class="custom-checkbox"></span> Thyme</label>
-          <label><input type="checkbox" /><span class="custom-checkbox"></span> Rosemary</label>
-        </div>
-      </div>
+  <div class="section">
+    <h2 style="text-align: center;">Select Recipes & Get Shopping List</h2>
+    <img src="/mnt/data/Screen Shot 2025-05-08 at 7.22.19 PM.png" alt="Recipe Selection" class="image-full"/>
+    <div style="text-align: center;">
+      <button onclick="alert('Continue to groceries')">Continue</button>
     </div>
   </div>
 
-  <script>
-    function showSection(id) {
-      document.querySelectorAll('.section').forEach(section => {
-        section.classList.remove('active');
-      });
-      document.getElementById(id).classList.add('active');
-    }
-
-    function filterRecipes() {
-      const searchValue = document.getElementById('searchInput').value.toLowerCase();
-      const recipes = document.querySelectorAll('.recipe');
-      const searchResults = document.getElementById('searchResults');
-      searchResults.innerHTML = '';
-
-      recipes.forEach(recipe => {
-        const title = recipe.dataset.title.toLowerCase();
-        if (title.includes(searchValue)) {
-          const clone = recipe.cloneNode(true);
-          highlightText(clone, searchValue);
-          searchResults.appendChild(clone);
-          setUpToggle(clone);
-        }
-      });
-
-      if (!searchResults.hasChildNodes()) {
-        searchResults.innerHTML = '<p>No matching recipes found.</p>';
-      }
-
-      searchResults.style.opacity = 0;
-      requestAnimationFrame(() => {
-        searchResults.style.transition = 'opacity 0.4s';
-        searchResults.style.opacity = 1;
-      });
-    }
-
-    function highlightText(recipeElement, searchValue) {
-      if (!searchValue) return;
-      const h3 = recipeElement.querySelector('h3');
-      const regex = new RegExp(`(${searchValue})`, 'ig');
-      h3.innerHTML = h3.textContent.replace(regex, `<mark>$1</mark>`);
-    }
-
-    function setUpToggle(container = document) {
-      container.querySelectorAll('.recipe').forEach(recipe => {
-        if (!recipe.querySelector('.details')) {
-          const details = document.createElement('div');
-          details.className = 'details';
-          details.style.marginTop = '1rem';
-          details.style.display = 'none';
-          details.innerHTML = `
-            <strong>Ingredients:</strong>
-            <ul><li>Ingredient 1</li><li>Ingredient 2</li></ul>
-            <strong>Instructions:</strong>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-          `;
-          recipe.appendChild(details);
-
-          recipe.setAttribute('role', 'button');
-          recipe.setAttribute('tabindex', '0');
-
-          recipe.addEventListener('click', () => {
-            details.style.display = details.style.display === 'none' ? 'block' : 'none';
-          });
-          recipe.addEventListener('keypress', e => {
-            if (e.key === 'Enter') details.style.display = details.style.display === 'none' ? 'block' : 'none';
-          });
-        }
-      });
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      setUpToggle();
-    });
-  </script>
-
+  <footer>
+    &copy; 2025 Smart Meal Planner UI – Concept Prototype
+  </footer>
 </body>
 </html>
+
