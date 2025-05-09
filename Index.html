@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Chef's Plate Recipes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chef's Plate Recipes</title>
   <style>
-    /* Base Styles */
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
@@ -16,7 +15,7 @@
     header {
       background-color: #344F3A;
       color: #fff;
-      padding: 1.5rem 1rem;
+      padding: 1rem;
       text-align: center;
     }
 
@@ -24,26 +23,24 @@
       display: flex;
       justify-content: center;
       gap: 2rem;
-      background-color: #e6e6d6;
-      padding: 1rem 0;
+      margin: 1rem 0;
     }
 
     nav a {
       text-decoration: none;
       color: #344F3A;
       font-weight: bold;
-      font-size: 1.1rem;
-      transition: color 0.3s;
+      cursor: pointer;
     }
 
     nav a:hover {
-      color: #2e8b57;
+      text-decoration: underline;
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 800px;
       margin: 0 auto;
-      padding: 2rem 1rem;
+      padding: 1rem;
     }
 
     .section {
@@ -54,161 +51,96 @@
       display: block;
     }
 
-    /* Recipe Cards */
-    .recipe {
-      border: 1px solid #344F3A;
-      border-radius: 12px;
-      padding: 1rem;
-      margin-bottom: 1.5rem;
-      background-color: #fffef5;
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s;
-    }
-
-    .recipe:hover {
-      transform: scale(1.02);
-    }
-
-    .recipe img {
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
-      border-radius: 50%;
-      border: 3px solid #344F3A;
-    }
-
-    .recipe h3 {
-      margin: 0 0 0.5rem 0;
-    }
-
-    .recipe p {
-      margin: 0;
-    }
-
-    /* Search Section */
     .search-bar {
       display: flex;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
     }
 
     .search-bar input {
       flex: 1;
-      padding: 0.75rem;
+      padding: 0.5rem;
       border: 1px solid #344F3A;
-      border-radius: 8px 0 0 8px;
-      font-size: 1rem;
+      border-radius: 4px 0 0 4px;
     }
 
     .search-bar button {
-      padding: 0.75rem 1.5rem;
+      padding: 0.5rem 1rem;
       background-color: #344F3A;
       color: white;
       border: none;
-      border-radius: 0 8px 8px 0;
+      border-radius: 0 4px 4px 0;
       cursor: pointer;
-      font-size: 1rem;
-      transition: background-color 0.3s;
     }
 
-    .search-bar button:hover {
-      background-color: #2e8b57;
-    }
-
-    /* Checklist Section */
-    .checklist-container {
+    .recipe {
+      border: 1px solid #344F3A;
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 1rem;
       background-color: #fffef5;
-      padding: 2rem;
+      cursor: pointer;
+    }
+
+    .recipe img {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+
+    .recipe-detail {
+      display: none;
+      padding: 0.5rem 1rem;
+      background-color: #eef2e6;
+      border-left: 4px solid #344F3A;
+    }
+
+    .checklist-container {
+      background-color: white;
+      padding: 30px 40px;
       border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    }
-
-    .checklist-container h2 {
-      text-align: center;
-      margin-bottom: 1.5rem;
-      font-size: 1.8rem;
-    }
-
-    .checklist {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .checklist label {
-      display: flex;
-      align-items: center;
-      font-size: 1.1rem;
-      cursor: pointer;
-      position: relative;
-      padding-left: 2.5rem;
-    }
-
-    .checklist input[type="checkbox"] {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      max-width: 400px;
+      margin: 2rem auto;
     }
 
     .custom-checkbox {
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      height: 20px;
       width: 20px;
-      background-color: transparent;
-      border: 2px solid #344F3A;
+      height: 20px;
       border-radius: 50%;
-      transition: background-color 0.3s;
+      border: 2px solid #344F3A;
+      margin-right: 15px;
+      position: relative;
+      background-color: transparent;
+      transition: background-color 0.3s ease;
     }
 
-    .checklist input[type="checkbox"]:checked ~ .custom-checkbox {
+    .checklist input[type="checkbox"] {
+      display: none;
+    }
+
+    .checklist input[type="checkbox"]:checked + .custom-checkbox {
       background-color: #344F3A;
     }
 
     .custom-checkbox::after {
       content: "✔";
+      color: white;
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      color: white;
+      transform: translate(-50%, -55%) scale(0);
       font-size: 14px;
       transition: transform 0.2s ease;
     }
 
-    .checklist input[type="checkbox"]:checked ~ .custom-checkbox::after {
-      transform: translate(-50%, -50%) scale(1);
-    }
-
-    /* Responsive Design */
-    @media (max-width: 600px) {
-      .recipe {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .search-bar {
-        flex-direction: column;
-      }
-
-      .search-bar input,
-      .search-bar button {
-        width: 100%;
-        border-radius: 8px;
-      }
-
-      .search-bar button {
-        margin-top: 0.5rem;
-      }
+    .checklist input[type="checkbox"]:checked + .custom-checkbox::after {
+      transform: translate(-50%, -55%) scale(1);
     }
   </style>
 </head>
 <body>
-
   <header>
     <h1>Chef's Plate Recipes</h1>
   </header>
@@ -222,32 +154,28 @@
   <div class="container">
     <!-- Home Section -->
     <div id="home" class="section active">
-      <div class="recipe" data-title="Avocado Toast">
-        <img src="https://media.gettyimages.com/id/1251583567/photo/toasts-of-dark-bread-with-avocado-slices-red-tomatoes-fried-egg-and-microgreen-top-view-with.jpg?s=612x612&w=0&k=20&c=mQfW5zvZhNDWJyHYRyfWkAptg5NVJNYzn84XAdib5jc=" alt="Avocado Toast" />
-        <div>
-          <h3>Avocado Toast</h3>
-          <p>Simple and delicious breakfast with mashed avocado and toast.</p>
+      <div class="recipe" onclick="toggleDetail(this)">
+        <img src="https://media.gettyimages.com/id/1251583567/photo/toasts-of-dark-bread-with-avocado-slices-red-tomatoes-fried-egg-and-microgreen-top-view-with.jpg?s=612x612&w=0&k=20&c=mQfW5zvZhNDWJyHYRyfWkAptg5NVJNYzn84XAdib5jc=" alt="Avocado Toast">
+        <h3>Avocado Toast</h3>
+        <div class="recipe-detail">
+          <strong>Ingredients:</strong> Avocado, Bread, Egg, Tomato, Microgreens<br>
+          <strong>Instructions:</strong> Toast bread, mash avocado, top with egg, tomato, and greens.
         </div>
       </div>
-      <div class="recipe" data-title="Forest Smoothie">
-        <img src="https://www.cookingclassy.com/wp-content/uploads/2019/07/green-smoothie-10.jpg" alt="Forest Smoothie" />
-        <div>
-          <h3>Forest Smoothie</h3>
-          <p>Spinach, banana, and almond milk smoothie for a green kick.</p>
+      <div class="recipe" onclick="toggleDetail(this)">
+        <img src="https://www.cookingclassy.com/wp-content/uploads/2019/07/green-smoothie-10.jpg" alt="Forest Smoothie">
+        <h3>Forest Smoothie</h3>
+        <div class="recipe-detail">
+          <strong>Ingredients:</strong> Spinach, Banana, Almond Milk<br>
+          <strong>Instructions:</strong> Blend all ingredients until smooth.
         </div>
       </div>
-      <div class="recipe" data-title="Herb Chicken">
-        <img src="https://www.paleorunningmomma.com/wp-content/uploads/2020/12/creamy-garlic-herb-chicken_-14.jpg" alt="Herb Chicken" />
-        <div>
-          <h3>Herb Chicken</h3>
-          <p>Grilled chicken seasoned with rosemary, thyme, and garlic.</p>
-        </div>
-      </div>
-      <div class="recipe" data-title="Beef Dumpling in Soup">
-        <img src="https://www.marionskitchen.com/wp-content/uploads/2021/08/Northern-Chinese-Beef-Dumplings2914.jpg" alt="Beef Dumpling" />
-        <div>
-          <h3>Beef Dumpling in Soup</h3>
-          <p>Hot and sour soup with beef dumplings.</p>
+      <div class="recipe" onclick="toggleDetail(this)">
+        <img src="https://www.paleorunningmomma.com/wp-content/uploads/2020/12/creamy-garlic-herb-chicken_-14.jpg" alt="Herb Chicken">
+        <h3>Herb Chicken</h3>
+        <div class="recipe-detail">
+          <strong>Ingredients:</strong> Chicken, Garlic, Thyme, Rosemary<br>
+          <strong>Instructions:</strong> Grill seasoned chicken until fully cooked.
         </div>
       </div>
     </div>
@@ -258,9 +186,7 @@
         <input type="text" id="searchInput" placeholder="Search recipes..." oninput="filterRecipes()" />
         <button onclick="filterRecipes()">Search</button>
       </div>
-      <div id="searchResults">
-        <!-- Results populated by JS -->
-      </div>
+      <div id="searchResults"></div>
     </div>
 
     <!-- Checklist Section -->
@@ -268,51 +194,15 @@
       <div class="checklist-container">
         <h2>Ingredient Checklist</h2>
         <div class="checklist">
-          <label>
-            <input type="checkbox" />
-            <span class="custom-checkbox"></span>
-            Avocados
-          </label>
-          <label>
-            <input type="checkbox" />
-            <span class="custom-checkbox"></span>
-            Bread
-          </label>
-          <label>
-            <input type="checkbox" />
-            <span class="custom-checkbox"></span>
-            Spinach
-          </label>
-          <label>
-            <input type="checkbox" />
-            <span class="custom-checkbox"></span>
-            Bananas
-          </label>
-          <label>
-            <input type="checkbox" />
-            <span class="custom-checkbox"></span>
-            Almond Milk
-          </label>
-          <label>
-            <input type="checkbox" />
-            <span class="custom-checkbox"></span>
-            Chicken
-          </label>
-          <label>
-            <input type="checkbox" />
-            <span class="custom-checkbox"></span>
-            Garlic
-          </label>
-          <label>
-            <input type="checkbox" />
-            <span class="custom-checkbox"></span>
-            Thyme
-          </label>
-          <label>
-            <input type="checkbox" />
-            <span class="custom-checkbox"></span>
-            Rosemary
-          </label>
+          <label><input type="checkbox" /><span class="custom-checkbox"></span> Avocados</label>
+          <label><input type="checkbox" /><span class="custom-checkbox"></span> Bread</label>
+          <label><input type="checkbox" /><span class="custom-checkbox"></span> Spinach</label>
+          <label><input type="checkbox" /><span class="custom-checkbox"></span> Bananas</label>
+          <label><input type="checkbox" /><span class="custom-checkbox"></span> Almond Milk</label>
+          <label><input type="checkbox" /><span class="custom-checkbox"></span> Chicken</label>
+          <label><input type="checkbox" /><span class="custom-checkbox"></span> Garlic</label>
+          <label><input type="checkbox" /><span class="custom-checkbox"></span> Thyme</label>
+          <label><input type="checkbox" /><span class="custom-checkbox"></span> Rosemary</label>
         </div>
       </div>
     </div>
@@ -323,7 +213,33 @@
       document.querySelectorAll('.section').forEach(section => {
         section.classList.remove('active');
       });
-      document
-::contentReference[oaicite:0]{index=0}
- 
-      </html>
+      document.getElementById(id).classList.add('active');
+    }
+
+    function filterRecipes() {
+      const input = document.getElementById("searchInput").value.toLowerCase();
+      const recipes = document.querySelectorAll("#home .recipe");
+      const resultsContainer = document.getElementById("searchResults");
+      resultsContainer.innerHTML = "";
+
+      recipes.forEach(recipe => {
+        const title = recipe.querySelector("h3").textContent.toLowerCase();
+        if (title.includes(input)) {
+          const clone = recipe.cloneNode(true);
+          clone.onclick = () => toggleDetail(clone);
+          resultsContainer.appendChild(clone);
+        }
+      });
+
+      if (!resultsContainer.hasChildNodes()) {
+        resultsContainer.innerHTML = "<p>No matching recipes found.</p>";
+      }
+    }
+
+    function toggleDetail(element) {
+      const detail = element.querySelector(".recipe-detail");
+      detail.style.display = detail.style.display === "block" ? "none" : "block";
+    }
+  </script>
+</body>
+</html>
