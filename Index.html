@@ -1,126 +1,323 @@
-// App.jsx
-import React, { useState } from 'react';
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { CheckCircle, Search } from "lucide-react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chef's Plate Recipes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --main-green: #344F3A;
+      --light-bg: #f5f5dc;
+      --card-bg: #fffef5;
+      --accent: #2e8b57;
+    }
 
-const recipes = [
-  {
-    id: 1,
-    title: "Pancakes",
-    ingredients: ["Flour", "Eggs", "Milk", "Baking Powder", "Salt"],
-    steps: ["Mix ingredients", "Heat pan", "Pour batter", "Flip when bubbles", "Serve hot"]
-  },
-  {
-    id: 2,
-    title: "Spaghetti Bolognese",
-    ingredients: ["Spaghetti", "Minced Meat", "Tomato Sauce", "Onion", "Garlic"],
-    steps: ["Cook pasta", "Sauté onion and garlic", "Add meat", "Add sauce", "Simmer and serve"]
-  }
-];
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--light-bg);
+      color: var(--main-green);
+    }
 
-export default function App() {
-  const [search, setSearch] = useState("");
-  const [checkedSteps, setCheckedSteps] = useState({});
+    header {
+      background-color: var(--main-green);
+      color: #fff;
+      padding: 1.5rem 1rem;
+      text-align: center;
+    }
 
-  const handleCheck = (recipeId, stepIndex) => {
-    setCheckedSteps(prev => ({
-      ...prev,
-      [recipeId]: {
-        ...(prev[recipeId] || {}),
-        [stepIndex]: !((prev[recipeId] || {})[stepIndex])
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      background-color: #eaeae0;
+      padding: 1rem 0;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--main-green);
+      font-weight: bold;
+      font-size: 1.1rem;
+      transition: color 0.3s;
+      cursor: pointer;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .active {
+      display: block;
+    }
+
+    /* Recipe Cards */
+    .recipe {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--main-green);
+      transition: transform 0.2s ease;
+    }
+
+    .recipe:hover {
+      transform: scale(1.02);
+    }
+
+    .recipe img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid var(--main-green);
+    }
+
+    .recipe h3 {
+      margin: 0 0 0.5rem 0;
+    }
+
+    .recipe p {
+      margin: 0;
+    }
+
+    /* Search */
+    .search-bar {
+      display: flex;
+      margin-bottom: 2rem;
+    }
+
+    .search-bar input {
+      flex: 1;
+      padding: 0.75rem;
+      border: 1px solid var(--main-green);
+      border-radius: 8px 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .search-bar button {
+      padding: 0.75rem 1.5rem;
+      background-color: var(--main-green);
+      color: white;
+      border: none;
+      border-radius: 0 8px 8px 0;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+
+    .search-bar button:hover {
+      background-color: var(--accent);
+    }
+
+    /* Checklist */
+    .checklist-container {
+      background-color: var(--card-bg);
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .checklist-container h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .checklist label {
+      display: flex;
+      align-items: center;
+      font-size: 1.1rem;
+      cursor: pointer;
+      position: relative;
+      padding-left: 2.5rem;
+    }
+
+    .checklist input[type="checkbox"] {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .custom-checkbox {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 20px;
+      width: 20px;
+      background-color: transparent;
+      border: 2px solid var(--main-green);
+      border-radius: 50%;
+      transition: background-color 0.3s;
+    }
+
+    .checklist input[type="checkbox"]:checked ~ .custom-checkbox {
+      background-color: var(--main-green);
+    }
+
+    .custom-checkbox::after {
+      content: "✔";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      color: white;
+      font-size: 14px;
+      transition: transform 0.2s ease;
+    }
+
+    .checklist input[type="checkbox"]:checked ~ .custom-checkbox::after {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .recipe {
+        flex-direction: column;
+        align-items: flex-start;
       }
-    }));
-  };
 
-  const filteredRecipes = recipes.filter(recipe =>
-    recipe.title.toLowerCase().includes(search.toLowerCase())
-  );
+      .search-bar {
+        flex-direction: column;
+      }
 
-  return (
-    <main className="min-h-screen bg-pink-50 p-6 font-sans">
-      <h1 className="text-4xl font-bold text-pink-600 mb-6 text-center">🍓 Cute Recipe App</h1>
+      .search-bar input,
+      .search-bar button {
+        width: 100%;
+        border-radius: 8px;
+      }
 
-      <Tabs defaultValue="home" className="max-w-2xl mx-auto">
-        <TabsList className="grid grid-cols-3 bg-pink-100 rounded-xl mb-4">
-          <TabsTrigger value="home">Home</TabsTrigger>
-          <TabsTrigger value="search">Search</TabsTrigger>
-          <TabsTrigger value="checklist">Checklist</TabsTrigger>
-        </TabsList>
+      .search-bar button {
+        margin-top: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
 
-        <TabsContent value="home">
-          <div className="space-y-4">
-            {recipes.map(recipe => (
-              <Card key={recipe.id} className="rounded-2xl shadow-md">
-                <CardContent className="p-4">
-                  <h2 className="text-xl font-semibold text-pink-700">{recipe.title}</h2>
-                  <p className="mt-2 text-gray-700">Ingredients:</p>
-                  <ul className="list-disc ml-5 text-gray-600">
-                    {recipe.ingredients.map((item, i) => <li key={i}>{item}</li>)}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
+  <header>
+    <h1>Chef's Plate Recipes</h1>
+  </header>
 
-        <TabsContent value="search">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 mb-4">
-              <Input
-                placeholder="Search recipes..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <Search className="text-pink-500" />
-            </div>
-            {filteredRecipes.map(recipe => (
-              <Card key={recipe.id} className="rounded-2xl shadow-md">
-                <CardContent className="p-4">
-                  <h2 className="text-xl font-semibold text-pink-700">{recipe.title}</h2>
-                  <p className="mt-2 text-gray-700">Ingredients:</p>
-                  <ul className="list-disc ml-5 text-gray-600">
-                    {recipe.ingredients.map((item, i) => <li key={i}>{item}</li>)}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
-            {filteredRecipes.length === 0 && (
-              <p className="text-center text-pink-600">No recipes found 😢</p>
-            )}
-          </div>
-        </TabsContent>
+  <nav>
+    <a onclick="showSection('home')">Home</a>
+    <a onclick="showSection('search')">Search</a>
+    <a onclick="showSection('checklist')">Checklist</a>
+  </nav>
 
-        <TabsContent value="checklist">
-          <div className="space-y-4">
-            {recipes.map(recipe => (
-              <Card key={recipe.id} className="rounded-2xl shadow-md">
-                <CardContent className="p-4">
-                  <h2 className="text-xl font-semibold text-pink-700 mb-2">{recipe.title}</h2>
-                  <ul className="space-y-2">
-                    {recipe.steps.map((step, index) => (
-                      <li key={index} className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={!!(checkedSteps[recipe.id]?.[index])}
-                          onChange={() => handleCheck(recipe.id, index)}
-                          className="accent-pink-500 w-5 h-5"
-                        />
-                        <span className={checkedSteps[recipe.id]?.[index] ? "line-through text-gray-400" : ""}>
-                          {step}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
-    </main>
-  );
-}
+  <div class="container">
+    <!-- Home Section -->
+    <div id="home" class="section active">
+      <div class="recipe" data-title="Avocado Toast">
+        <img src="https://media.gettyimages.com/id/1251583567/photo/toasts-of-dark-bread-with-avocado-slices-red-tomatoes-fried-egg-and-microgreen-top-view-with.jpg?s=612x612&w=0&k=20&c=mQfW5zvZhNDWJyHYRyfWkAptg5NVJNYzn84XAdib5jc=" alt="Avocado Toast" />
+        <div>
+          <h3>Avocado Toast</h3>
+          <p>Simple and delicious breakfast with mashed avocado and toast.</p>
+        </div>
+      </div>
+      <div class="recipe" data-title="Forest Smoothie">
+        <img src="https://www.cookingclassy.com/wp-content/uploads/2019/07/green-smoothie-10.jpg" alt="Forest Smoothie" />
+        <div>
+          <h3>Forest Smoothie</h3>
+          <p>Spinach, banana, and almond milk smoothie for a green kick.</p>
+        </div>
+      </div>
+      <div class="recipe" data-title="Herb Chicken">
+        <img src="https://www.paleorunningmomma.com/wp-content/uploads/2020/12/creamy-garlic-herb-chicken_-14.jpg" alt="Herb Chicken" />
+        <div>
+          <h3>Herb Chicken</h3>
+          <p>Grilled chicken seasoned with rosemary, thyme, and garlic.</p>
+        </div>
+      </div>
+      <div class="recipe" data-title="Beef Dumpling in Soup">
+        <img src="https://www.marionskitchen.com/wp-content/uploads/2021/08/Northern-Chinese-Beef-Dumplings2914.jpg" alt="Beef Dumpling" />
+        <div>
+          <h3>Beef Dumpling in Soup</h3>
+          <p>Hot and sour soup with beef dumplings.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Section -->
+    <div id="search" class="section">
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search recipes..." oninput="filterRecipes()" />
+        <button onclick="filterRecipes()">Search</button>
+      </div>
+      <div id="searchResults">
+        <!-- Results will appear here -->
+      </div>
+    </div>
+
+    <!-- Checklist Section -->
+    <div id="checklist" class="section">
+      <div class="checklist-container">
+        <h2>Ingredient Checklist</h2>
+        <div class="checklist">
+          <label><input type="checkbox" /><span class="custom-checkbox"></span> Avocados</label>
+          <label><input type="checkbox" /><span class="custom-checkbox"></span> Bread</label>
+          <label><input type="checkbox" /><span class="custom-checkbox"></span> Spinach</label>
+          <label><input type="checkbox" /><span class="custom-checkbox"></span> Bananas</label>
+          <label><input type="checkbox" /><span class="custom-checkbox"></span> Almond Milk</label>
+          <label><input type="checkbox" /><span class="custom-checkbox"></span> Chicken</label>
+          <label><input type="checkbox" /><span class="custom-checkbox"></span> Garlic</label>
+          <label><input type="checkbox" /><span class="custom-checkbox"></span> Thyme</label>
+          <label><input type="checkbox" /><span class="custom-checkbox"></span> Rosemary</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(id).classList.add('active');
+    }
+
+    function filterRecipes() {
+      const input = document.getElementById("searchInput").value.toLowerCase();
+      const recipes = document.querySelectorAll("#home .recipe");
+      const resultsContainer = document.getElementById("searchResults");
+      resultsContainer.innerHTML = "";
+
+      recipes.forEach(recipe => {
+        const title = recipe.getAttribute("data-title").toLowerCase();
+        if (title.includes(input)) {
+          const clone = recipe.cloneNode(true);
+          resultsContainer.appendChild(clone);
+        }
+      });
+
+      if (!resultsContainer.hasChildNodes()) {
+        resultsContainer.innerHTML = "<p>No matching recipes found.</p>";
+      }
+    }
+  </script>
+
+</body>
+</html>
+
 
