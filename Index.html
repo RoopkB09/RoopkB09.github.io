@@ -1,126 +1,162 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Chef's Plate Recipes</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    /* (Styles remain unchanged from the merged version you approved) */
-  </style>
-</head>
-<body>
-  <header>
-    <h1>Chef's Plate Recipes</h1>
-  </header>
-  <nav>
-    <a onclick="showSection('home')">Home</a>
-    <a onclick="showSection('search')">Search</a>
-    <a onclick="showSection('checklist')">Checklist</a>
-  </nav>
-  <div class="container">
-    <div id="home" class="section active">
-      <!-- Recipe template -->
-      <div class="recipe" data-title="Avocado Toast" data-tags="breakfast,vegetarian">
-        <img src="https://media.gettyimages.com/id/1251583567/photo/toasts-of-dark-bread-with-avocado-slices-red-tomatoes-fried-egg-and-microgreen-top-view-with.jpg" alt="Avocado Toast" />
-        <div>
-          <h3>Avocado Toast</h3>
-          <p>Simple and delicious breakfast with mashed avocado and toast.</p>
-          <p><strong>Tags:</strong> Breakfast, Vegetarian</p>
-          <button onclick="toggleInstructions(this)">View Instructions</button>
-          <div class="instructions" style="display: none;">
-            <ol>
-              <li>Toast the bread slices.</li>
-              <li>Mash the avocado with salt and lemon.</li>
-              <li>Spread on toast and top with optional tomatoes or eggs.</li>
-            </ol>
-          </div>
-          <button onclick="saveRecipe(this)">Save Recipe</button>
+import React, { useState, useEffect } from "react";
+
+const recipesData = [
+  {
+    id: 1,
+    title: "Spaghetti Bolognese",
+    category: "Italian",
+    ingredients: ["Spaghetti", "Minced beef", "Tomato sauce"],
+    instructions: "Cook pasta. Fry beef. Mix with sauce.",
+  },
+  {
+    id: 2,
+    title: "Chicken Curry",
+    category: "Indian",
+    ingredients: ["Chicken", "Curry powder", "Coconut milk"],
+    instructions: "Cook chicken. Add spices. Pour coconut milk.",
+  },
+  {
+    id: 3,
+    title: "Tacos",
+    category: "Mexican",
+    ingredients: ["Tortillas", "Beef", "Lettuce", "Cheese"],
+    instructions: "Cook beef. Fill tortillas. Add toppings.",
+  },
+];
+
+function App() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [savedRecipes, setSavedRecipes] = useState([]);
+  const [visibleInstructions, setVisibleInstructions] = useState([]);
+  const [checkedItems, setCheckedItems] = useState({});
+
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem("savedRecipes")) || [];
+    setSavedRecipes(saved);
+  }, []);
+
+  const toggleSaveRecipe = (id) => {
+    let updated = [...savedRecipes];
+    if (updated.includes(id)) {
+      updated = updated.filter((rid) => rid !== id);
+    } else {
+      updated.push(id);
+    }
+    setSavedRecipes(updated);
+    localStorage.setItem("savedRecipes", JSON.stringify(updated));
+  };
+
+  const toggleInstructions = (id) => {
+    setVisibleInstructions((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
+
+  const toggleCheck = (recipeId, item) => {
+    setCheckedItems((prev) => {
+      const key = `${recipeId}-${item}`;
+      return {
+        ...prev,
+        [key]: !prev[key],
+      };
+    });
+  };
+
+  const filteredRecipes = recipesData.filter((recipe) => {
+    const matchesSearch = recipe.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === "All" || recipe.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  const categories = ["All", ...new Set(recipesData.map((r) => r.category))];
+
+  return (
+    <div className="App">
+      <h1>Recipe App</h1>
+
+      <input
+        type="text"
+        placeholder="Search recipes..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+
+      <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+        {categories.map((cat, idx) => (
+          <option key={idx} value={cat}>
+            {cat}
+          </option>
+        ))}
+      </select>
+
+      {filteredRecipes.map((recipe) => (
+        <div key={recipe.id} className="recipe">
+          <h2>{recipe.title}</h2>
+          <p>Category: {recipe.category}</p>
+
+          <button onClick={() => toggleSaveRecipe(recipe.id)}>
+            {savedRecipes.includes(recipe.id) ? "Unsave" : "Save"}
+          </button>
+
+          <h4>Ingredients:</h4>
+          <ul>
+            {recipe.ingredients.map((item, i) => {
+              const key = `${recipe.id}-${item}`;
+              return (
+                <li key={i}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={!!checkedItems[key]}
+                      onChange={() => toggleCheck(recipe.id, item)}
+                    />
+                    {item}
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
+
+          <button onClick={() => toggleInstructions(recipe.id)}>
+            {visibleInstructions.includes(recipe.id) ? "Hide Instructions" : "Show Instructions"}
+          </button>
+
+          {visibleInstructions.includes(recipe.id) && (
+            <p><strong>Instructions:</strong> {recipe.instructions}</p>
+          )}
         </div>
-      </div>
-      <!-- Additional recipes omitted for brevity; follow same structure -->
+      ))}
+      <style>
+        {`
+          .App {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 700px;
+            margin: auto;
+          }
+
+          input, select {
+            padding: 8px;
+            margin: 10px 5px;
+          }
+
+          .recipe {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
+          }
+
+          button {
+            margin: 10px 0;
+            padding: 5px 10px;
+          }
+        `}
+      </style>
     </div>
-    <div id="search" class="section">
-      <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="Search recipes or tags..." oninput="filterRecipes()" />
-        <button onclick="filterRecipes()">Search</button>
-      </div>
-      <div id="searchResults"></div>
-    </div>
-    <div id="checklist" class="section">
-      <div class="checklist-container">
-        <h2>Ingredient Checklist</h2>
-        <div class="checklist">
-          <!-- Checklist items remain unchanged -->
-        </div>
-      </div>
-    </div>
-    <div id="saved" class="section">
-      <h2>Saved Recipes</h2>
-      <div id="savedRecipes"></div>
-    </div>
-  </div>
-  <script>
-    function showSection(id) {
-      document.querySelectorAll('.section').forEach(section => {
-        section.classList.remove('active');
-      });
-      document.getElementById(id).classList.add('active');
-      if (id === 'saved') loadSavedRecipes();
-    }
+  );
+}
 
-    function toggleInstructions(button) {
-      const instructions = button.nextElementSibling;
-      instructions.style.display = instructions.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function filterRecipes() {
-      const input = document.getElementById("searchInput").value.toLowerCase();
-      const recipes = document.querySelectorAll("#home .recipe");
-      const resultsContainer = document.getElementById("searchResults");
-      resultsContainer.innerHTML = "";
-
-      recipes.forEach(recipe => {
-        const title = recipe.getAttribute("data-title").toLowerCase();
-        const tags = recipe.getAttribute("data-tags").toLowerCase();
-        if (title.includes(input) || tags.includes(input)) {
-          const clone = recipe.cloneNode(true);
-          resultsContainer.appendChild(clone);
-        }
-      });
-
-      if (!resultsContainer.hasChildNodes()) {
-        resultsContainer.innerHTML = "<p>No matching recipes found.</p>";
-      }
-    }
-
-    function saveRecipe(button) {
-      const recipe = button.closest('.recipe');
-      const title = recipe.getAttribute('data-title');
-      let saved = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
-      if (!saved.includes(title)) {
-        saved.push(title);
-        localStorage.setItem('savedRecipes', JSON.stringify(saved));
-        alert('Recipe saved!');
-      } else {
-        alert('Recipe already saved.');
-      }
-    }
-
-    function loadSavedRecipes() {
-      const savedTitles = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
-      const allRecipes = document.querySelectorAll("#home .recipe");
-      const container = document.getElementById("savedRecipes");
-      container.innerHTML = "";
-      allRecipes.forEach(recipe => {
-        if (savedTitles.includes(recipe.getAttribute('data-title'))) {
-          const clone = recipe.cloneNode(true);
-          container.appendChild(clone);
-        }
-      });
-    }
-  </script>
-</body>
-</html>
-
-
-
+export default App;
