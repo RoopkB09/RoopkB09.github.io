@@ -39,6 +39,7 @@
       color: var(--main-green);
       font-weight: bold;
       transition: color 0.3s;
+      cursor: pointer;
     }
 
     nav a:hover {
@@ -68,6 +69,7 @@
       margin-bottom: 1.5rem;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
       transition: transform 0.2s ease;
+      cursor: pointer;
     }
 
     .recipe:hover {
@@ -164,6 +166,39 @@
     .checklist input[type="checkbox"]:checked + .custom-checkbox::after {
       transform: translate(-50%, -55%) scale(1);
     }
+
+    /* Modal styles */
+    #recipeModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    #recipeModalContent {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      width: 90%;
+      position: relative;
+    }
+
+    #recipeModalContent span {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    #recipeModalContent h2 {
+      margin-top: 0;
+    }
   </style>
 </head>
 <body>
@@ -181,28 +216,43 @@
 <div class="container">
   <!-- Home Section -->
   <div id="home" class="section active">
-    <div class="recipe" data-title="Avocado Toast">
+    <div class="recipe"
+         data-title="Avocado Toast"
+         data-ingredients="Avocados, Bread, Salt, Lemon Juice"
+         data-instructions="1. Toast bread. 2. Mash avocado with lemon and salt. 3. Spread and serve.">
       <img src="https://media.gettyimages.com/id/1251583567/photo/toasts-of-dark-bread-with-avocado-slices-red-tomatoes-fried-egg-and-microgreen-top-view-with.jpg?s=612x612&w=0&k=20&c=mQfW5zvZhNDWJyHYRyfWkAptg5NVJNYzn84XAdib5jc=" alt="Avocado Toast" />
       <div>
         <h3>Avocado Toast</h3>
         <p>Simple and delicious breakfast with mashed avocado and toast.</p>
       </div>
     </div>
-    <div class="recipe" data-title="Forest Smoothie">
+
+    <div class="recipe"
+         data-title="Forest Smoothie"
+         data-ingredients="Spinach, Bananas, Almond Milk"
+         data-instructions="1. Add spinach, bananas, and almond milk to blender. 2. Blend until smooth. 3. Serve chilled.">
       <img src="https://www.cookingclassy.com/wp-content/uploads/2019/07/green-smoothie-10.jpg" alt="Forest Smoothie" />
       <div>
         <h3>Forest Smoothie</h3>
         <p>Spinach, banana, and almond milk smoothie for a green kick.</p>
       </div>
     </div>
-    <div class="recipe" data-title="Herb Chicken">
+
+    <div class="recipe"
+         data-title="Herb Chicken"
+         data-ingredients="Chicken, Garlic, Rosemary, Thyme"
+         data-instructions="1. Season chicken with herbs and garlic. 2. Grill until cooked through. 3. Serve hot.">
       <img src="https://www.paleorunningmomma.com/wp-content/uploads/2020/12/creamy-garlic-herb-chicken_-14.jpg" alt="Herb Chicken" />
       <div>
         <h3>Herb Chicken</h3>
         <p>Grilled chicken seasoned with rosemary, thyme, and garlic.</p>
       </div>
     </div>
-    <div class="recipe" data-title="Beef Dumpling in Soup">
+
+    <div class="recipe"
+         data-title="Beef Dumpling in Soup"
+         data-ingredients="Beef Dumplings, Soup Broth, Scallions, Soy Sauce"
+         data-instructions="1. Boil dumplings. 2. Add to hot broth. 3. Garnish and serve.">
       <img src="https://www.marionskitchen.com/wp-content/uploads/2021/08/Northern-Chinese-Beef-Dumplings2914.jpg" alt="Beef Dumpling" />
       <div>
         <h3>Beef Dumpling in Soup</h3>
@@ -241,6 +291,18 @@
   </div>
 </div>
 
+<!-- Modal -->
+<div id="recipeModal">
+  <div id="recipeModalContent">
+    <span onclick="closeModal()">✖</span>
+    <h2 id="modalTitle"></h2>
+    <h4>Ingredients</h4>
+    <p id="modalIngredients"></p>
+    <h4>Instructions</h4>
+    <p id="modalInstructions"></p>
+  </div>
+</div>
+
 <script>
   function showSection(id) {
     document.querySelectorAll('.section').forEach(section => {
@@ -259,6 +321,7 @@
       const title = recipe.getAttribute("data-title").toLowerCase();
       if (title.includes(input)) {
         const clone = recipe.cloneNode(true);
+        clone.addEventListener('click', () => showRecipeDetails(clone));
         resultsContainer.appendChild(clone);
       }
     });
@@ -267,8 +330,29 @@
       resultsContainer.innerHTML = "<p>No matching recipes found.</p>";
     }
   }
+
+  document.querySelectorAll('.recipe').forEach(recipe => {
+    recipe.addEventListener('click', () => showRecipeDetails(recipe));
+  });
+
+  function showRecipeDetails(recipe) {
+    const title = recipe.getAttribute('data-title');
+    const ingredients = recipe.getAttribute('data-ingredients');
+    const instructions = recipe.getAttribute('data-instructions');
+
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalIngredients').textContent = ingredients;
+    document.getElementById('modalInstructions').textContent = instructions;
+
+    document.getElementById('recipeModal').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('recipeModal').style.display = 'none';
+  }
 </script>
 
 </body>
 </html>
+
 
