@@ -24,6 +24,7 @@
       justify-content: center;
       gap: 2rem;
       margin: 1rem 0;
+      flex-wrap: wrap;
     }
 
     nav a {
@@ -31,14 +32,16 @@
       color: #344F3A;
       font-weight: bold;
       cursor: pointer;
+      padding: 0.5rem;
+      transition: color 0.3s ease;
     }
 
     nav a:hover {
-      text-decoration: underline;
+      color: #88A47C;
     }
 
     .container {
-      max-width: 800px;
+      max-width: 1000px;
       margin: 0 auto;
       padding: 1rem;
     }
@@ -54,6 +57,7 @@
     .search-bar {
       display: flex;
       margin-bottom: 1rem;
+      flex-wrap: wrap;
     }
 
     .search-bar input {
@@ -61,6 +65,7 @@
       padding: 0.5rem;
       border: 1px solid #344F3A;
       border-radius: 4px 0 0 4px;
+      min-width: 200px;
     }
 
     .search-bar button {
@@ -74,11 +79,17 @@
 
     .recipe {
       border: 1px solid #344F3A;
-      border-radius: 6px;
+      border-radius: 8px;
       padding: 1rem;
       margin-bottom: 1rem;
       background-color: #fffef5;
       cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .recipe:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
 
     .recipe img {
@@ -90,10 +101,17 @@
     }
 
     .recipe-detail {
-      display: none;
-      padding: 0.5rem 1rem;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease;
       background-color: #eef2e6;
+      padding: 0 1rem;
       border-left: 4px solid #344F3A;
+    }
+
+    .recipe-detail.open {
+      max-height: 300px;
+      padding: 0.5rem 1rem;
     }
 
     .checklist-container {
@@ -103,6 +121,13 @@
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
       max-width: 400px;
       margin: 2rem auto;
+    }
+
+    .checklist label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      cursor: pointer;
     }
 
     .custom-checkbox {
@@ -153,59 +178,53 @@
 
   <div class="container">
     <!-- Home Section -->
-    <div id="home" class="section active">
-      <div class="recipe" onclick="toggleDetail(this)">
-        <img src="https://media.gettyimages.com/id/1251583567/photo/toasts-of-dark-bread-with-avocado-slices-red-tomatoes-fried-egg-and-microgreen-top-view-with.jpg?s=612x612&w=0&k=20&c=mQfW5zvZhNDWJyHYRyfWkAptg5NVJNYzn84XAdib5jc=" alt="Avocado Toast">
+    <section id="home" class="section active">
+      <article class="recipe" onclick="toggleDetail(this)">
+        <img src="https://media.gettyimages.com/id/1251583567/photo/toasts-of-dark-bread-with-avocado-slices-red-tomatoes-fried-egg-and-microgreen-top-view-with.jpg" alt="Avocado Toast">
         <h3>Avocado Toast</h3>
         <div class="recipe-detail">
           <strong>Ingredients:</strong> Avocado, Bread, Egg, Tomato, Microgreens<br>
           <strong>Instructions:</strong> Toast bread, mash avocado, top with egg, tomato, and greens.
         </div>
-      </div>
-      <div class="recipe" onclick="toggleDetail(this)">
+      </article>
+
+      <article class="recipe" onclick="toggleDetail(this)">
         <img src="https://www.cookingclassy.com/wp-content/uploads/2019/07/green-smoothie-10.jpg" alt="Forest Smoothie">
         <h3>Forest Smoothie</h3>
         <div class="recipe-detail">
           <strong>Ingredients:</strong> Spinach, Banana, Almond Milk<br>
           <strong>Instructions:</strong> Blend all ingredients until smooth.
         </div>
-      </div>
-      <div class="recipe" onclick="toggleDetail(this)">
+      </article>
+
+      <article class="recipe" onclick="toggleDetail(this)">
         <img src="https://www.paleorunningmomma.com/wp-content/uploads/2020/12/creamy-garlic-herb-chicken_-14.jpg" alt="Herb Chicken">
         <h3>Herb Chicken</h3>
         <div class="recipe-detail">
           <strong>Ingredients:</strong> Chicken, Garlic, Thyme, Rosemary<br>
           <strong>Instructions:</strong> Grill seasoned chicken until fully cooked.
         </div>
-      </div>
-    </div>
+      </article>
+    </section>
 
     <!-- Search Section -->
-    <div id="search" class="section">
+    <section id="search" class="section">
       <div class="search-bar">
         <input type="text" id="searchInput" placeholder="Search recipes..." oninput="filterRecipes()" />
         <button onclick="filterRecipes()">Search</button>
       </div>
       <div id="searchResults"></div>
-    </div>
+    </section>
 
     <!-- Checklist Section -->
-    <div id="checklist" class="section">
+    <section id="checklist" class="section">
       <div class="checklist-container">
         <h2>Ingredient Checklist</h2>
-        <div class="checklist">
-          <label><input type="checkbox" /><span class="custom-checkbox"></span> Avocados</label>
-          <label><input type="checkbox" /><span class="custom-checkbox"></span> Bread</label>
-          <label><input type="checkbox" /><span class="custom-checkbox"></span> Spinach</label>
-          <label><input type="checkbox" /><span class="custom-checkbox"></span> Bananas</label>
-          <label><input type="checkbox" /><span class="custom-checkbox"></span> Almond Milk</label>
-          <label><input type="checkbox" /><span class="custom-checkbox"></span> Chicken</label>
-          <label><input type="checkbox" /><span class="custom-checkbox"></span> Garlic</label>
-          <label><input type="checkbox" /><span class="custom-checkbox"></span> Thyme</label>
-          <label><input type="checkbox" /><span class="custom-checkbox"></span> Rosemary</label>
+        <div class="checklist" id="checklistItems">
+          <!-- checklist is populated by JavaScript -->
         </div>
       </div>
-    </div>
+    </section>
   </div>
 
   <script>
@@ -214,6 +233,11 @@
         section.classList.remove('active');
       });
       document.getElementById(id).classList.add('active');
+    }
+
+    function toggleDetail(element) {
+      const detail = element.querySelector(".recipe-detail");
+      detail.classList.toggle("open");
     }
 
     function filterRecipes() {
@@ -236,10 +260,42 @@
       }
     }
 
-    function toggleDetail(element) {
-      const detail = element.querySelector(".recipe-detail");
-      detail.style.display = detail.style.display === "block" ? "none" : "block";
+    // Persistent Checklist
+    const ingredients = [
+      "Avocados", "Bread", "Spinach", "Bananas", "Almond Milk",
+      "Chicken", "Garlic", "Thyme", "Rosemary"
+    ];
+
+    function saveChecklistState() {
+      const states = {};
+      document.querySelectorAll(".checklist input").forEach((input, i) => {
+        states[ingredients[i]] = input.checked;
+      });
+      localStorage.setItem("checklistState", JSON.stringify(states));
     }
+
+    function loadChecklist() {
+      const checklist = document.getElementById("checklistItems");
+      const saved = JSON.parse(localStorage.getItem("checklistState") || "{}");
+
+      ingredients.forEach((item, index) => {
+        const label = document.createElement("label");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = saved[item] || false;
+        checkbox.onchange = saveChecklistState;
+
+        const custom = document.createElement("span");
+        custom.className = "custom-checkbox";
+
+        label.appendChild(checkbox);
+        label.appendChild(custom);
+        label.append(" " + item);
+        checklist.appendChild(label);
+      });
+    }
+
+    loadChecklist();
   </script>
 </body>
 </html>
