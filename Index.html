@@ -7,14 +7,15 @@
   <style>
     :root {
       --main-green: #344F3A;
-      --accent-green: #2e8b57;
-      --bg-cream: #f5f5dc;
+      --light-bg: #f7f7ed;
+      --card-bg: #ffffff;
+      --accent: #a0c4a8;
     }
 
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: var(--bg-cream);
+      background-color: var(--light-bg);
       color: var(--main-green);
     }
 
@@ -29,24 +30,25 @@
       display: flex;
       justify-content: center;
       gap: 2rem;
-      margin: 1rem 0;
+      background-color: #eaeae0;
+      padding: 1rem;
     }
 
     nav a {
       text-decoration: none;
       color: var(--main-green);
       font-weight: bold;
-      cursor: pointer;
+      transition: color 0.3s;
     }
 
     nav a:hover {
-      text-decoration: underline;
+      color: #000;
     }
 
     .container {
-      max-width: 900px;
+      max-width: 1000px;
       margin: 0 auto;
-      padding: 1rem;
+      padding: 2rem;
     }
 
     .section {
@@ -57,9 +59,32 @@
       display: block;
     }
 
+    .recipe {
+      display: flex;
+      gap: 1rem;
+      background-color: var(--card-bg);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease;
+    }
+
+    .recipe:hover {
+      transform: scale(1.01);
+    }
+
+    .recipe img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid var(--main-green);
+    }
+
     .search-bar {
       display: flex;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
 
     .search-bar input {
@@ -78,39 +103,19 @@
       cursor: pointer;
     }
 
-    .recipe {
-      border: 1px solid var(--main-green);
-      border-radius: 10px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      background-color: #fffef5;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .recipe img {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 50%;
-      border: 2px solid var(--main-green);
-    }
-
     .checklist-container {
-      background-color: white;
+      background-color: #ffffff;
       padding: 30px 40px;
       border-radius: 16px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-      max-width: 400px;
-      margin: 2rem auto;
+      max-width: 500px;
+      margin: 0 auto;
     }
 
     .checklist-container h2 {
       font-size: 24px;
       margin-bottom: 20px;
       text-align: center;
-      color: var(--main-green);
     }
 
     .checklist {
@@ -124,7 +129,6 @@
       align-items: center;
       font-size: 18px;
       cursor: pointer;
-      color: var(--main-green);
     }
 
     .checklist input[type="checkbox"] {
@@ -214,7 +218,7 @@
       <button onclick="filterRecipes()">Search</button>
     </div>
     <div id="searchResults">
-      <!-- Results populated by JS -->
+      <!-- Results will appear here -->
     </div>
   </div>
 
@@ -267,4 +271,5 @@
 
 </body>
 </html>
+
 
